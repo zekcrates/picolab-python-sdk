@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.pico_token
+dist/
+build/
+*.egg-info/
