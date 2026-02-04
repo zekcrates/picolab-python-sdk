@@ -1,4 +1,4 @@
-# PicoLab Python SDK 
+# PicoLab Python CLI/SDK
 
 We will be able to login/get/push/test/ the files 
 
