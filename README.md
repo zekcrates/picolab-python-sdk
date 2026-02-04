@@ -57,3 +57,8 @@ uv pip install -r requirements.txt
 uv pip install -e . 
 
 ```
+
+## Todo 
+
+- Add **picolab show free** 
+- Add **picolab show premium**

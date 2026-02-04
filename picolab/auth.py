@@ -1,11 +1,8 @@
-import os
 from pathlib import Path
-
 # Constants
 APP_NAME = "picolab"
 CONFIG_DIR = Path.home() / f".{APP_NAME}"
 CONFIG_FILE = CONFIG_DIR / "key"
-
 
 def save_key(key: str):
     """Writes the API key to the user's config folder."""

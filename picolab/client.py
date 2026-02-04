@@ -64,7 +64,7 @@ def upload_project(api_key: str):
             if response.status_code == 200:
                 return {"success": True, "data": response.json()} 
             elif response.status_code == 401:
-                return {"success": False, "message": "❌ Invalid API Key. Try 'picolab login' again."}
+                return {"success": False, "message": "Invalid API Key. Try 'picolab login' again."}
             else:
                 return {"success": False, "message": f"Server Error ({response.status_code}): {response.text}"}
             
@@ -81,7 +81,7 @@ def verify_key(api_key: str):
     Returns: (True, username) OR (False, error_message)
     """
 
-    print(f"🌍 Verifying key with {SERVER_URL}...")
+    print(f"Verifying key with {SERVER_URL}...")
 
     try:
         payload = {"apikey": api_key}

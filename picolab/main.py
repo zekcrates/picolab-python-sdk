@@ -12,7 +12,7 @@ def login(key: str = typer.Option(..., prompt=True, hide_input=True)):
     """
     Authenticate securely. Verifies the key with the server first.
     """
-    console.print("[yellow]🔑 Authenticating...[/yellow]")
+    console.print("[yellow] Authenticating...[/yellow]")
     
     is_valid, message = client.verify_key(key)
     
@@ -30,33 +30,33 @@ def get(project_name: str):
     try:
         key = auth.get_key_or_fail()
     except Exception:
-        console.print("[red]❌ Not logged in.[/red] Run 'picolab login' first.")
+        console.print("[red] Not logged in.[/red] Run 'picolab login' first.")
         return
-    console.print(f"[cyan]⬇️  Fetching {project_name}...[/cyan]")
+    console.print(f"[cyan]⬇  Fetching {project_name}...[/cyan]")
     
     success, message = client.download_starter_project(project_name, key)
     
     if success:
-        console.print(f"[bold green]✅ Success![/bold green]")
+        console.print(f"[bold green] Success![/bold green]")
         console.print(message)
-        console.print(f"\n👉 Next step: [bold white]cd {project_name}[/bold white]")
+        console.print(f"\n Next step: [bold white]cd {project_name}[/bold white]")
     else:
-        console.print(f"[bold red]❌ Error:[/bold red] {message}")
+        console.print(f"[bold red] Error:[/bold red] {message}")
 @app.command()
 def push():
     """Deploy your code."""
     try:
         key = auth.get_key_or_fail()
     except FileNotFoundError:
-        console.print("[red]❌ Not logged in.[/red] Run 'picolab login'.")
+        console.print("[red] Not logged in.[/red] Run 'picolab login'.")
         return
 
-    console.print("[yellow]🚀 Packaging and uploading...[/yellow]")
+    console.print("[yellow] Packaging and uploading...[/yellow]")
     
     result = client.upload_project(key)
     
     if result["success"]:
-        console.print("[green]✅ BUILD PASSED[/green]")
+        console.print("[green] BUILD PASSED[/green]")
         
         server_response = result.get("data", {})
         console.print(server_response.get("message", "Upload successful."))
