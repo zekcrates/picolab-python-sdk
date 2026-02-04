@@ -48,16 +48,21 @@ def push():
     try:
         key = auth.get_key_or_fail()
     except FileNotFoundError:
-        console.print("[red] Not logged in.[/red] Run 'picolab login'.")
+        console.print("[red]❌ Not logged in.[/red] Run 'picolab login'.")
         return
 
-    console.print("[yellow] Packaging and uploading...[/yellow]")
-    try:
-        response = client.upload_project(key)
-
-    except Exception as e:
-        console.print(f"[red] Connection failed:[/red] {e}")
-
+    console.print("[yellow]🚀 Packaging and uploading...[/yellow]")
+    
+    result = client.upload_project(key)
+    
+    if result["success"]:
+        console.print("[green]✅ BUILD PASSED[/green]")
+        
+        server_response = result.get("data", {})
+        console.print(server_response.get("message", "Upload successful."))
+        
+    else:
+        console.print(f"[red]❌ Failed:[/red] {result['message']}")
 
 def main():
     app()

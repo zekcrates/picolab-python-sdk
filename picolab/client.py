@@ -37,14 +37,44 @@ def download_starter_project(project_name: str, api_key:str):
     
 def upload_project(api_key: str):
     cwd = os.getcwd()
-    project_slug = os.path.basename(cwd)
 
-    zip_name = "picolab_upload"
-    shutil.make_archive(zip_name, 'zip', cwd)
-    zip_file = f"{zip_name}.zip"
+    if not os.path.exists(os.path.join(cwd, "picolab.yaml")):
+        return {"success": False, "message": "No 'picolab.yaml' found. Are you in the right folder?"}
+    
+    zip_filename = "pico_submission.zip"
 
+    with zipfile.ZipFile(zip_filename ,'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(cwd):
+            # we will ignore some folders here 
+            
+            for file in files:
+                if file == zip_filename :
+                    continue
+                local_path = os.path.join(root, file)
+                rel_path = os.path.relpath(local_path, cwd)
+                zipf.write(local_path, rel_path)
 
+    try:
+        with open(zip_filename, 'rb') as f:
+            headers = {"Authorization": api_key}
+            files = {"file": f}
 
+            response = requests.post(f"{SERVER_URL}/push", headers=headers, files=files)
+
+            if response.status_code == 200:
+                return {"success": True, "data": response.json()} 
+            elif response.status_code == 401:
+                return {"success": False, "message": "❌ Invalid API Key. Try 'picolab login' again."}
+            else:
+                return {"success": False, "message": f"Server Error ({response.status_code}): {response.text}"}
+            
+    except requests.exceptions.ConnectionError:
+        return {"success": False, "message": "Could not connect to Picolab Server."}
+    except Exception as e:
+        return {"success": False, "message": f"Client Error: {str(e)}"}
+    finally:
+        if os.path.exists(zip_filename):
+            os.remove(zip_filename)
 def verify_key(api_key: str):
     """
     Hits the server's /login endpoint to check if the key is valid.
